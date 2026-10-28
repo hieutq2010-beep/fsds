@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trắc Nghiệm GDQP-AN 11 - THPT Kim Xuyên</title>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Custom scrollbar for dark mode */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    .animate-pulse-quick {
+      animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) 2;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#090d16] text-slate-100 selection:bg-teal-500/30 selection:text-teal-200">
+
+  <!-- TOP HEADER (Sticky) -->
+  <header class="sticky top-0 z-40 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 shadow-xl">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3">
+      <div class="flex items-center justify-between gap-2 sm:gap-4">
+        
+        <!-- Brand & School info -->
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-teal-500/20 text-white font-black text-lg">
+            QP
+          </div>
+          <div>
+            <h1 class="text-xs sm:text-base font-bold text-slate-100 flex items-center gap-1.5 leading-tight">
+              <span>GDQP-AN 11</span>
+              <span class="hidden md:inline text-xs font-normal text-slate-400">| THPT Kim Xuyên</span>
+            </h1>
+            <p class="text-[10px] sm:text-xs text-teal-400 font-medium">Giữa HK1 • Trắc nghiệm 1 chạm</p>
+          </div>
+        </div>
+
+        <!-- Exam Code Selector Buttons -->
+        <div class="flex items-center gap-1 sm:gap-1.5 overflow-x-auto py-1 px-1 bg-slate-900/90 rounded-xl border border-slate-800">
+          <button id="btn-m112" class="exam-btn px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 bg-teal-600 text-white shadow-sm" data-code="112">
+            Mã 112
+          </button>
+          <button id="btn-m114" class="exam-btn px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200" data-code="114">
+            Mã 114
+          </button>
+          <button id="btn-m110" class="exam-btn px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200" data-code="110">
+            Mã 110
+          </button>
+          <button id="btn-m113" class="exam-btn px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200" data-code="113">
+            Mã 113
+          </button>
+
+        </div>
+
+        <!-- Timer & Controls -->
+        <div class="flex items-center gap-2">
+          <!-- Timer pill -->
+          <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/90 border border-slate-700/80 text-xs font-mono font-bold text-slate-200">
+            <svg class="w-3.5 h-3.5 text-teal-400 animate-spin" style="animation-duration: 8s;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span id="timer-display">45:00</span>
+          </div>
+
+          <!-- Reset / Restart button -->
+          <button id="btn-reset-quiz" title="Làm lại từ đầu" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition border border-slate-700">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- PROGRESS & STATS BAR -->
+      <div id="stats-bar-wrapper" class="mt-2 pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between text-xs gap-2">
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-slate-400">Đúng:</span>
+            <span id="stat-correct" class="font-bold text-emerald-400">0</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+            <span class="text-slate-400">Sai:</span>
+            <span id="stat-wrong" class="font-bold text-rose-400">0</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+            <span class="text-slate-400">Còn lại:</span>
+            <span id="stat-remaining" class="font-bold text-slate-300">28</span>
+          </div>
+          <div class="hidden sm:flex items-center gap-1.5 pl-2 border-l border-slate-700">
+            <span class="text-slate-400">Điểm:</span>
+            <span id="stat-score" class="font-bold text-amber-400 text-sm">0.0 / 5.0</span>
+          </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="flex-1 max-w-xs sm:max-w-md w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-slate-700/60">
+          <div id="progress-fill" class="bg-gradient-to-r from-teal-500 to-emerald-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN BODY LAYOUT -->
+  <main class="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+    <!-- LEFT / MAIN COLUMN: QUESTIONS LIST OR ESSAY VIEW -->
+    <div class="lg:col-span-3 space-y-4">
+      
+      <!-- Exam banner -->
+      <div id="exam-banner" class="p-4 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-850 border border-slate-800 flex items-center justify-between">
+        <div>
+          <span id="banner-tag" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-teal-500/10 text-teal-400 border border-teal-500/20">
+            Mã đề 112
+          </span>
+          <h2 id="banner-title" class="text-base sm:text-lg font-bold text-white mt-1">
+            Đề kiểm tra giữa học kỳ I - Môn GDQP-AN 11
+          </h2>
+          <p id="banner-student" class="text-xs text-slate-400 mt-0.5">
+            Thí sinh trên bài thi mẫu: Khổng Minh Hiếu (Lớp 11B9)
+          </p>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-slate-400 block">Quy mô</span>
+          <span class="text-sm sm:text-base font-bold text-teal-300">28 câu trắc nghiệm</span>
+        </div>
+      </div>
+
+      <!-- INSTRUCTION NOTIFICATION -->
+      <div class="px-3.5 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>
+          <strong class="text-emerald-400 font-semibold">Chế độ 1 chạm:</strong> Chạm vào đáp án bất kỳ, hệ thống lập tức hiển thị màu <span class="text-emerald-400 font-semibold">Xanh lá (Đúng)</span> hoặc <span class="text-rose-400 font-semibold">Đỏ (Sai)</span> kèm phương án chuẩn và căn cứ lý thuyết!
+        </span>
+      </div>
+
+      <!-- CONTAINER CHO CÁC CÂU HỎI TRẮC NGHIỆM -->
+      <div id="questions-container" class="space-y-4">
+        <!-- Rendered by JavaScript -->
+      </div>
+
+      
+
+          <!-- Câu 2 tự luận -->
+          <div class="space-y-3 p-4 rounded-xl bg-slate-800/40 border border-slate-700/60">
+            <h4 class="text-base font-bold text-teal-300">
+              Câu 2: Em có trách nhiệm gì trong việc thực hiện luật nghĩa vụ quân sự? (2,5 điểm)
+            </h4>
+            
+            <div class="space-y-2 text-xs sm:text-sm text-slate-300 pl-2 border-l-2 border-teal-500/50">
+              <p class="font-semibold text-emerald-400">Gợi ý câu trả lời đầy đủ:</p>
+              <ul class="list-disc pl-5 space-y-1.5 text-slate-300">
+                <li>Chăm chỉ học tập, rèn luyện phẩm chất đạo đức cách mạng, lối sống lành mạnh và rèn luyện thể lực tốt.</li>
+                <li>Tìm hiểu, học tập và chấp hành nghiêm túc các quy định của Luật Nghĩa vụ quân sự 2015 và các văn bản hướng dẫn thi hành.</li>
+                <li>Thực hiện đăng ký nghĩa vụ quân sự lần đầu khi đủ 17 tuổi (đối với nam công dân) theo lệnh gọi của Ban Chỉ huy quân sự cấp xã.</li>
+                <li>Chấp hành nghiêm chỉnh lệnh gọi sơ tuyển, khám sức khỏe nghĩa vụ quân sự; trung thực trong quá trình tự khai báo tình trạng sức khỏe, không gian dối làm sai lệch kết quả.</li>
+                <li>Nâng cao ý thức cảnh giác cách mạng, sẵn sàng lên đường nhập ngũ thực hiện nghĩa vụ quân sự, bảo vệ Tổ quốc khi có lệnh điều động.</li>
+                <li>Tuyên truyền, vận động gia đình, bạn bè chấp hành tốt Luật Nghĩa vụ quân sự; kiên quyết đấu tranh với các hành vi trốn tránh hoặc chống đối việc thực hiện nghĩa vụ quân sự.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: QUESTION MATRIX & SUMMARY CARD (Sticky on Desktop) -->
+    <div class="lg:col-span-1 space-y-4">
+      
+      <!-- QUESTION MATRIX PALETTE -->
+      <div class="sticky top-24 p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">
+            Bảng câu hỏi (1 - 28)
+          </h3>
+          <span id="matrix-answered-count" class="text-xs font-semibold text-teal-400">
+            0/28 câu
+          </span>
+        </div>
+
+        <!-- 28 Question Number Grid -->
+        <div id="question-matrix" class="grid grid-cols-7 gap-1.5 py-1">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Legend -->
+        <div class="grid grid-cols-3 gap-1 pt-2 border-t border-slate-800/80 text-[10px] text-center text-slate-400">
+          <div class="flex items-center justify-center gap-1">
+            <span class="w-2.5 h-2.5 rounded bg-slate-800 border border-slate-700"></span>
+            <span>Chưa làm</span>
+          </div>
+          <div class="flex items-center justify-center gap-1">
+            <span class="w-2.5 h-2.5 rounded bg-emerald-600"></span>
+            <span class="text-emerald-400">Đúng</span>
+          </div>
+          <div class="flex items-center justify-center gap-1">
+            <span class="w-2.5 h-2.5 rounded bg-rose-600"></span>
+            <span class="text-rose-400">Sai</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-2 space-y-2">
+          <button id="btn-show-summary" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-semibold text-xs transition-all shadow-md shadow-teal-900/30 flex items-center justify-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Tổng kết kết quả</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL TỔNG KẾT KẾT QUẢ -->
+  <div id="modal-summary" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative text-center space-y-4 animate-scale-up">
+      
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-400 mx-auto flex items-center justify-center text-white shadow-xl shadow-teal-500/20">
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-black text-white">Kết Quả Bài Kiểm Tra</h3>
+        <p id="modal-exam-title" class="text-xs text-teal-400 font-medium">Mã đề 112</p>
+      </div>
+
+      <!-- Score Box -->
+      <div class="p-4 rounded-2xl bg-slate-800/60 border border-slate-700/80 flex items-center justify-around">
+        <div>
+          <span class="text-xs text-slate-400 block">Điểm TN (Thang 5)</span>
+          <span id="modal-score-5" class="text-2xl font-black text-amber-400">0.0 / 5.0</span>
+        </div>
+        <div class="w-px h-10 bg-slate-700"></div>
+        <div>
+          <span class="text-xs text-slate-400 block">Quy đổi (Thang 10)</span>
+          <span id="modal-score-10" class="text-2xl font-black text-emerald-400">0.0 / 10</span>
+        </div>
+      </div>
+
+      <!-- Details breakdown -->
+      <div class="grid grid-cols-3 gap-2 text-xs">
+        <div class="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-800/40">
+          <span class="text-emerald-400 font-bold text-lg block" id="modal-count-correct">0</span>
+          <span class="text-slate-400">Câu đúng</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-rose-950/40 border border-rose-800/40">
+          <span class="text-rose-400 font-bold text-lg block" id="modal-count-wrong">0</span>
+          <span class="text-slate-400">Câu sai</span>
+        </div>
+        <div class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-700/40">
+          <span class="text-slate-300 font-bold text-lg block" id="modal-count-unanswered">28</span>
+          <span class="text-slate-400">Chưa làm</span>
+        </div>
+      </div>
+
+      <!-- Review remark -->
+      <p id="modal-eval" class="text-xs text-slate-300 italic px-2">
+        Hãy tiếp tục luyện tập để nắm vững các điều luật và kiến thức quốc phòng!
+      </p>
+
+      <!-- Buttons -->
+      <div class="pt-2 flex items-center gap-3">
+        <button id="modal-btn-close" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs transition">
+          Xem lại câu hỏi
+        </button>
+        <button id="modal-btn-retry" class="flex-1 py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-semibold text-xs transition shadow-lg shadow-teal-900/30">
+          Làm lại đề này
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Embedded exam database
+    const EXAMS_DATA = {"112": {"title": "Mã đề 112", "student": "Khổng Minh Hiếu - Lớp 11B9", "questions": [{"id": 1, "q": "Câu 1. Nội dung nào sau đây phản ánh đúng mục tiêu của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Phát huy cao nhất sức mạnh của dân tộc kết hợp với sức mạnh của thời đại.", "B. Quán triệt đường lối độc lập, tự chủ; đồng thời chủ động tích cực hội nhập quốc tế.", "C. Luôn nhất quán và kiên định mục tiêu độc lập dân tộc gắn liền với chủ nghĩa xã hội.", "D. Bảo vệ vững chắc độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Tổ quốc."], "answer": 3, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 2, "q": "Câu 2. Nội dung nào sau đây phản ánh đúng tiêu chuẩn tuyển chọn công dân thực hiện nghĩa vụ tham gia công an nhân dân?", "options": ["A. Tốt nghiệp THPT đối với công dân các xã miền núi.", "B. Công dân đã có tiền án, tiền sự.", "C. Thể hình cân đối, không dị hình, dị dạng.", "D. Đang bị truy cứu trách nhiệm hình sự."], "answer": 2, "exp": "Theo quy định tại Nghị định 70/2019/NĐ-CP, một trong các tiêu chuẩn sức khỏe tuyển chọn công dân thực hiện nghĩa vụ tham gia CAND là thể hình cân đối, không dị hình, dị dạng."}, {"id": 3, "q": "Câu 3. Câu ca dao “Thầy đề cho số tảo lao/ Thầy bói nói dựa, chỗ nào cũng ma” phản ánh về loại tệ nạn xã hội nào dưới đây?", "options": ["A. Tệ nạn cờ bạc.", "B. Tệ nạn mại dâm.", "C. Tệ nạn ma túy.", "D. Tệ nạn mê tín dị đoan."], "answer": 3, "exp": "Câu ca dao châm biếm hiện tượng bói toán, tin vào ma quỷ vô căn cứ, phản ánh trực tiếp tệ nạn mê tín dị đoan."}, {"id": 4, "q": "Câu 4. Vấn đề nào dưới đây không liên quan đến an ninh môi trường?", "options": ["A. Thiên tai.", "B. An ninh thông tin.", "C. Dịch bệnh.", "D. Di cư tự do."], "answer": 1, "exp": "An ninh thông tin thuộc lĩnh vực an ninh mạng và an ninh truyền thông, không thuộc nhóm an ninh môi trường (gồm thiên tai, dịch bệnh, di cư tự do do biến đổi môi trường...)."}, {"id": 5, "q": "Câu 5. Nội dung nào sau đây không phản ánh đúng trách nhiệm của công dân trong thực hiện nghĩa vụ quân sự?", "options": ["A. Ngăn chặn các hành vi vi phạm quy định về đăng kí nghĩa vụ quân sự.", "B. Có mặt đúng thời gian quy định trong giấy gọi khám, kiểm tra sức khỏe.", "C. Làm sai lệch kết quả phân loại sức khỏe nhằm trốn tránh nghĩa vụ quân sự.", "D. Chấp hành quy định của pháp luật về đăng kí và thực hiện nghĩa vụ quân sự."], "answer": 2, "exp": "Hành vi gian dối, làm sai lệch kết quả phân loại sức khỏe nhằm trốn tránh NVQS là hành vi vi phạm pháp luật, bị nghiêm cấm."}, {"id": 6, "q": "Câu 6. Hôm nay nghỉ học, K rủ mấy bạn đến nhà đánh tú lơ khơ ăn tiền. Nếu nhận được lời mời của K, em nên lựa chọn cách ứng xử nào sau đây?", "options": ["A. Lập tức đồng ý đến nhà K chơi đánh bài ăn tiền.", "B. Từ chối nhưng vẫn đến nhà K để xem các bạn chơi.", "C. Đồng ý và rủ thêm các bạn khác cùng tham gia cho vui.", "D. Từ chối và khuyên K không nên thực hiện hành vi đó."], "answer": 3, "exp": "Đánh bài ăn tiền là hành vi vi phạm pháp luật về tệ nạn cờ bạc. Khi được rủ rê, học sinh cần kiên quyết từ chối và khuyên can bạn không tham gia."}, {"id": 7, "q": "Câu 7. Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ", "options": ["A. ranh giới ngoài của lãnh hải.", "B. đường cơ sở ra phía biển.", "C. ranh giới ngoài thềm lục địa.", "D. vùng nội thủy ra phía biển."], "answer": 1, "exp": "Theo Điều 11 Luật Biển Việt Nam 2012, Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ đường cơ sở ra phía biển."}, {"id": 8, "q": "Câu 8. Hiện tượng nào sau đây không phải là biểu hiện của biến đổi khí hậu?", "options": ["A. Tăng các hiện tượng thời tiết cực đoan (bão, lũ lụt,...).", "B. Nhiệt độ trung bình trên Trái Đất giảm.", "C. Suy giảm đa dạng sinh học.", "D. Băng tan, nước biển dâng, xâm nhập mặn."], "answer": 1, "exp": "Biến đổi khí hậu toàn cầu hiện nay gắn liền với hiện tượng nóng lên toàn cầu, tức là nhiệt độ trung bình trên Trái Đất tăng lên, không phải giảm."}, {"id": 9, "q": "Câu 9. Công dân được công nhận hoàn thành nghĩa vụ quân sự tại ngũ trong thời bình, khi đã hoàn thành nhiệm vụ tham gia công an xã liên tục từ đủ", "options": ["A. 18 tháng trở lên.", "B. 30 tháng trở lên.", "C. 24 tháng trở lên.", "D. 36 tháng trở lên."], "answer": 2, "exp": "Theo Điểm c Khoản 4 Điều 4 Luật Nghĩa vụ quân sự 2015, thời gian hoàn thành nhiệm vụ tham gia Công an xã liên tục từ đủ 24 tháng trở lên được công nhận hoàn thành NVQS tại ngũ trong thời bình."}, {"id": 10, "q": "Câu 10. Trong hồ sơ đăng kí nghĩa vụ quân sự lần đầu cần có", "options": ["A. bản chụp giấy khai sinh và sổ hộ khẩu.", "B. sổ hộ khẩu và bản chụp căn cước công dân.", "C. phiếu tự khai sức khỏe nghĩa vụ quân sự.", "D. giấy chứng nhận đăng kí nghĩa vụ quân sự."], "answer": 2, "exp": "Theo quy định, hồ sơ đăng ký NVQS lần đầu bao gồm Phiếu tự khai sức khỏe nghĩa vụ quân sự và bản chụp Giấy khai sinh/CCCD."}, {"id": 11, "q": "Câu 11. Để bảo vệ môi trường đất, chúng ta nên thực hiện biện pháp nào sau đây?", "options": ["A. Khai thác triệt để tài nguyên rừng để lấy gỗ phục vụ cho đời sống sản xuất.", "B. Tăng diện tích đất canh tác bằng các hành động: đốt nương làm rẫy.", "C. Nâng cao ý thức trách nhiệm bảo vệ môi trường đất của cộng đồng cư dân.", "D. Lạm dụng thuốc bảo vệ thực vật và phân bón hóa học trong sản xuất."], "answer": 2, "exp": "Nâng cao ý thức trách nhiệm của cộng đồng là giải pháp căn bản, bền vững hàng đầu để bảo vệ và chống thoái hóa môi trường đất."}, {"id": 12, "q": "Câu 12. Câu tục ngữ nào sau đây phản ánh về tệ nạn cờ bạc?", "options": ["A. Đi cuốc đau tay, đi cày mỏi gối.", "B. Bói ra ma, quét nhà ra rác.", "C. Đánh đề ra đê mà ở.", "D. Nhịn đói nằm co hơn ăn no vác nặng."], "answer": 2, "exp": "\"Đánh đề ra đê mà ở\" là câu tục ngữ dân gian đúc kết cảnh báo hậu quả tán gia bại sản của tệ nạn cờ bạc, số đề."}, {"id": 13, "q": "Câu 13. Vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở, được gọi là", "options": ["A. thềm lục địa.", "B. vùng đặc quyền kinh tế.", "C. vùng tiếp giáp lãnh hải.", "D. nội thủy."], "answer": 1, "exp": "Theo Điều 15 Luật Biển Việt Nam 2012, Vùng đặc quyền kinh tế là vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở."}, {"id": 14, "q": "Câu 14. Hành vi gian dối làm sai lệch kết quả phân loại sức khỏe của mình nhằm trốn tránh nghĩa vụ quân sự sẽ bị xử phạt bằng hình thức nào sau đây?", "options": ["A. Tù không thời hạn.", "B. Tù có thời hạn.", "C. Phạt tiền.", "D. Cải tạo không giam giữ."], "answer": 2, "exp": "Theo Nghị định 120/2013/NĐ-CP (sửa đổi tại Nghị định 37/2022/NĐ-CP), hành vi gian dối làm sai lệch kết quả phân loại sức khỏe bị xử phạt vi phạm hành chính bằng hình thức phạt tiền."}, {"id": 15, "q": "Câu 15. Hồ sơ đăng kí nghĩa vụ tham gia Công an nhân dân cần có loại giấy tờ nào sau đây?", "options": ["A. Tờ khai đăng kí thực hiện nghĩa vụ tham gia Công an nhân dân.", "B. Bản chụp căn cước công dân hoặc giấy chứng minh nhân dân.", "C. Giấy khai sinh và phiếu tự khai sức khỏe nghĩa vụ quân sự.", "D. Sổ hộ khẩu, giấy khai sinh hoặc bản chụp căn cước công dân."], "answer": 0, "exp": "Theo Khoản 1 Điều 6 Nghị định 70/2019/NĐ-CP, hồ sơ bắt buộc là Tờ khai đăng ký thực hiện nghĩa vụ tham gia CAND (theo mẫu có xác nhận của UBND cấp xã)."}, {"id": 16, "q": "Câu 16. Nội dung nào sau đây không phản ánh đúng quan điểm chỉ đạo của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Chỉ chú trọng xây dựng sức mạnh của đất nước về văn hóa - xã hội.", "B. Giữ vững sự lãnh đạo trực tiếp, tuyệt đối về mọi mặt của Đảng.", "C. Giữ vững môi trường hòa bình, ổn định để phát triển kinh tế - xã hội.", "D. Kết hợp chặt chẽ hai nhiệm vụ chiến lược xây dựng và bảo vệ Tổ quốc."], "answer": 0, "exp": "Quan điểm của Đảng là xây dựng sức mạnh tổng hợp của quốc gia trên tất cả các mặt: chính trị, kinh tế, quốc phòng, an ninh, đối ngoại và văn hóa - xã hội, không phải \"chỉ chú trọng văn hóa - xã hội\"."}, {"id": 17, "q": "Câu 17. Người nào có chức trách quyết định về: độ tuổi tuyển chọn và ngành nghề cần thiết để tuyển chọn công dân nữ thực hiện nghĩa vụ tham gia Công an nhân dân?", "options": ["A. Thủ tướng Chính phủ.", "B. Chủ tịch nước.", "C. Bộ trưởng Bộ Quốc phòng.", "D. Bộ trưởng Bộ Công an."], "answer": 3, "exp": "Theo Luật Công an nhân dân 2018 và Nghị định 70/2019/NĐ-CP, Bộ trưởng Bộ Công an có thẩm quyền quy định cụ thể độ tuổi và ngành nghề chuyên môn cần thiết để tuyển chọn công dân nữ tham gia CAND."}, {"id": 18, "q": "Câu 18. Tệ nạn mê tín dị đoan là các hành vi", "options": ["A. sử dụng trái phép chất ma tuý, nghiện ma tuý, vi phạm pháp luật về ma tuý.", "B. tin vào những điều mơ hồ dẫn đến cuồng tín, hành động trái với chuẩn mực xã hội.", "C. mua dâm, bán dâm và các hành vi khác có liên quan đến mua dâm, bán dâm.", "D. lợi dụng trò chơi để cá cược, sát phạt được thua bằng tiền hoặc lợi ích vật chất khác."], "answer": 1, "exp": "Tệ nạn mê tín dị đoan là hành vi tin vào những điều mơ hồ, nhảm nhí, không có thật dẫn đến cuồng tín, mù quáng và hành động trái với chuẩn mực đạo đức, pháp luật."}, {"id": 19, "q": "Câu 19. Bất kì thế lực nào có âm mưu và hành động chống phá mục tiêu của Việt Nam trong sự nghiệp xây dựng và bảo vệ Tổ quốc đều là", "options": ["A. đối tượng.", "B. đồng đội.", "C. đối tác.", "D. đồng minh."], "answer": 0, "exp": "Trong Chiến lược bảo vệ Tổ quốc: Những ai tôn trọng độc lập, chủ quyền, hợp tác bình đẳng cùng có lợi là đối tác; bất kì thế lực nào có âm mưu, hành động chống phá mục tiêu của ta đều là đối tượng."}, {"id": 20, "q": "Câu 20. Luật Biển Việt Nam năm 2012 bao gồm", "options": ["A. 320 điều và 9 phụ lục.", "B. 36 điều và 8 phụ lục.", "C. 9 chương với 62 điều.", "D. 7 chương với 55 điều."], "answer": 3, "exp": "Luật Biển Việt Nam được Quốc hội khóa XIII thông qua ngày 21/6/2012, có hiệu lực từ 1/1/2013, gồm 7 chương với 55 điều."}, {"id": 21, "q": "Câu 21. Những cá nhân, tổ chức có hành vi tham gia hoạt động mê tín dị đoan, tổ chức hoạt động mê tín dị đoan trong lễ hội... sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt tù chung thân.", "B. Phạt tù có thời hạn.", "C. Phạt cải tạo không giam giữ.", "D. Phạt vi phạm hành chính."], "answer": 3, "exp": "Theo Nghị định 38/2021/NĐ-CP, hành vi tham gia hoặc tổ chức hoạt động mê tín dị đoan trong lễ hội bị xử phạt vi phạm hành chính bằng tiền và buộc khắc phục hậu quả."}, {"id": 22, "q": "Câu 22. Thuật ngữ nào được đề cập đến trong đoạn trích sau đây: “....... là hoạt động phòng ngừa, hạn chế tác động xấu đến môi trường; ứng phó sự cố môi trường; khắc phục ô nhiễm, suy thoái môi trường, cải thiện chất lượng môi trường; sử dụng hợp lí tài nguyên thiên nhiên, đa dạng sinh học và ứng phó với biến đổi khí hậu” (Khoản 2 Điều 3 Luật Bảo vệ môi trường năm 2020)", "options": ["A. Sự cố môi trường.", "B. Suy thoái môi trường.", "C. Bảo vệ môi trường.", "D. An ninh môi trường."], "answer": 2, "exp": "Đoạn trích dẫn nguyên văn định nghĩa về \"Hoạt động bảo vệ môi trường\" tại Khoản 2 Điều 3 Luật Bảo vệ môi trường 2020."}, {"id": 23, "q": "Câu 23. Theo quy định trong Luật Biển Việt Nam năm 2012: vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm", "options": ["A. lãnh hải và vùng tiếp giáp lãnh hải.", "B. thềm lục địa và lòng đất dưới đáy biển.", "C. đáy biển và lòng đất dưới đáy biển.", "D. vùng nội thủy và tiếp giáp lãnh hải."], "answer": 2, "exp": "Theo Khoản 1 Điều 37 Luật Biển Việt Nam 2012: Vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm đáy biển và lòng đất dưới đáy biển."}, {"id": 24, "q": "Câu 24. “......... Hệ thống các yếu tố cấu thành môi trường cân bằng để bảo đảm điều kiện sống và phát triển của con người cùng các loài sinh vật trong hệ thống đó” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. An ninh môi trường.", "B. Biến đổi khí hậu.", "C. Ô nhiễm môi trường.", "D. Bảo vệ môi trường."], "answer": 0, "exp": "Theo Khoản 8 Điều 3 Luật Bảo vệ môi trường 2020: An ninh môi trường là hệ thống các yếu tố cấu thành môi trường cân bằng để bảo đảm điều kiện sống và phát triển của con người cùng các loài sinh vật trong hệ thống đó."}, {"id": 25, "q": "Câu 25. Ranh giới ngoài thềm lục địa cách đường cơ sở không quá", "options": ["A. 12 hải lí.", "B. 350 hải lí.", "C. 10 hải lí.", "D. 200 hải lí."], "answer": 1, "exp": "Theo Khoản 2 Điều 17 Luật Biển Việt Nam 2012: Ranh giới ngoài của thềm lục địa cách đường cơ sở không quá 350 hải lí (hoặc không quá 100 hải lí kể từ đường đẳng sâu 2.500m)."}, {"id": 26, "q": "Câu 26. Nguyên nhân chủ yếu gây ô nhiễm môi trường, suy thoái môi trường hay xảy ra sự cố môi trường là do", "options": ["A. núi lửa phun trào.", "B. bão, lũ lụt,...", "C. các hoạt động của con người.", "D. các nguyên nhân từ tự nhiên."], "answer": 2, "exp": "Tuy tự nhiên có gây ra một số tác động, nhưng các hoạt động sản xuất, sinh hoạt và khai thác tài nguyên thiếu bền vững của con người là nguyên nhân chủ yếu và trực tiếp nhất."}, {"id": 27, "q": "Câu 27. “Sự suy giảm về số lượng, chất lượng của thành phần môi trường, gây ảnh hưởng xấu đến sức khỏe con người, sinh vật tự nhiên” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. Sự cố môi trường.", "B. Ô nhiễm môi trường.", "C. Biến đổi khí hậu.", "D. Suy thoái môi trường."], "answer": 3, "exp": "Theo Khoản 7 Điều 3 Luật Bảo vệ môi trường 2020: Suy thoái môi trường là sự suy giảm về số lượng, chất lượng của thành phần môi trường, gây ảnh hưởng xấu đến sức khỏe con người, sinh vật, tự nhiên."}, {"id": 28, "q": "Câu 28. Hành vi đánh bạc trái phép chưa đến mức truy cứu trách nhiệm hình sự sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt vi phạm hành chính.", "B. Phạt cải tạo không giam giữ.", "C. Phạt tù có thời hạn.", "D. Phạt vi phạm hành chính, tù."], "answer": 0, "exp": "Đánh bạc trái phép chưa đến mức truy cứu TNHS (dưới 5 triệu đồng và không thuộc trường hợp tái phạm/có tiền án tiền sự) sẽ bị xử phạt vi phạm hành chính theo Điều 28 Nghị định 144/2021/NĐ-CP."}]}, "114": {"title": "Mã đề 114", "student": "Hà Bảo Nhi - Lớp 11B1", "questions": [{"id": 1, "q": "Câu 1. Hồ sơ đăng kí nghĩa vụ tham gia Công an nhân dân cần có loại giấy tờ nào sau đây?", "options": ["A. Giấy khai sinh và phiếu tự khai sức khỏe nghĩa vụ quân sự.", "B. Sổ hộ khẩu, giấy khai sinh hoặc bản chụp căn cước công dân.", "C. Tờ khai đăng kí thực hiện nghĩa vụ tham gia Công an nhân dân.", "D. Bản chụp căn cước công dân hoặc giấy chứng minh nhân dân."], "answer": 2, "exp": "Theo quy định tại Khoản 1 Điều 6 Nghị định 70/2019/NĐ-CP, hồ sơ đăng ký gồm Tờ khai đăng ký thực hiện nghĩa vụ tham gia CAND có xác nhận của UBND cấp xã."}, {"id": 2, "q": "Câu 2. Ranh giới ngoài thềm lục địa cách đường cơ sở không quá", "options": ["A. 12 hải lí.", "B. 350 hải lí.", "C. 200 hải lí.", "D. 10 hải lí."], "answer": 1, "exp": "Theo Khoản 2 Điều 17 Luật Biển Việt Nam 2012, ranh giới ngoài thềm lục địa không quá 350 hải lí tính từ đường cơ sở."}, {"id": 3, "q": "Câu 3. Những cá nhân, tổ chức có hành vi tham gia hoạt động mê tín dị đoan, tổ chức hoạt động mê tín dị đoan trong lễ hội... sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt tù có thời hạn.", "B. Phạt cải tạo không giam giữ.", "C. Phạt tù chung thân.", "D. Phạt vi phạm hành chính."], "answer": 3, "exp": "Theo Nghị định 38/2021/NĐ-CP, hành vi này bị xử phạt vi phạm hành chính."}, {"id": 4, "q": "Câu 4. Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ", "options": ["A. ranh giới ngoài thềm lục địa.", "B. đường cơ sở ra phía biển.", "C. vùng nội thủy ra phía biển.", "D. ranh giới ngoài của lãnh hải."], "answer": 1, "exp": "Theo Điều 11 Luật Biển Việt Nam 2012, Lãnh hải có chiều rộng 12 hải lí tính từ đường cơ sở ra phía biển."}, {"id": 5, "q": "Câu 5. Nội dung nào sau đây không phản ánh đúng quan điểm chỉ đạo của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Giữ vững sự lãnh đạo trực tiếp, tuyệt đối về mọi mặt của Đảng.", "B. Kết hợp chặt chẽ hai nhiệm vụ chiến lược xây dựng và bảo vệ Tổ quốc.", "C. Chỉ chú trọng xây dựng sức mạnh của đất nước về văn hóa - xã hội.", "D. Giữ vững môi trường hòa bình, ổn định để phát triển kinh tế - xã hội."], "answer": 2, "exp": "Đảng chỉ đạo xây dựng sức mạnh toàn diện trên mọi lĩnh vực chính trị, kinh tế, quốc phòng, an ninh, đối ngoại, văn hóa - xã hội, chứ không \"chỉ chú trọng văn hóa - xã hội\"."}, {"id": 6, "q": "Câu 6. “Sự suy giảm về số lượng, chất lượng của thành phần môi trường, gây ảnh hưởng xấu đến sức khỏe con người, sinh vật tự nhiên” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. Biến đổi khí hậu.", "B. Ô nhiễm môi trường.", "C. Sự cố môi trường.", "D. Suy thoái môi trường."], "answer": 3, "exp": "Theo Khoản 7 Điều 3 Luật Bảo vệ môi trường 2020: Đây là định nghĩa về Suy thoái môi trường."}, {"id": 7, "q": "Câu 7. Hành vi đánh bạc trái phép chưa đến mức truy cứu trách nhiệm hình sự sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt tù có thời hạn.", "B. Phạt vi phạm hành chính.", "C. Phạt vi phạm hành chính, tù.", "D. Phạt cải tạo không giam giữ."], "answer": 1, "exp": "Hành vi đánh bạc trái phép chưa đến mức truy cứu TNHS bị xử phạt vi phạm hành chính theo Điều 28 Nghị định 144/2021/NĐ-CP."}, {"id": 8, "q": "Câu 8. Nội dung nào sau đây phản ánh đúng tiêu chuẩn tuyển chọn công dân thực hiện nghĩa vụ tham gia công an nhân dân?", "options": ["A. Thể hình cân đối, không dị hình, dị dạng.", "B. Tốt nghiệp THPT đối với công dân các xã miền núi.", "C. Đang bị truy cứu trách nhiệm hình sự.", "D. Công dân đã có tiền án, tiền sự."], "answer": 0, "exp": "Theo Nghị định 70/2019/NĐ-CP, tiêu chuẩn về thể hình là cân đối, không dị hình, dị dạng."}, {"id": 9, "q": "Câu 9. Hành vi gian dối làm sai lệch kết quả phân loại sức khỏe của mình nhằm trốn tránh nghĩa vụ quân sự sẽ bị xử phạt bằng hình thức nào sau đây?", "options": ["A. Cải tạo không giam giữ.", "B. Tù có thời hạn.", "C. Tù không thời hạn.", "D. Phạt tiền."], "answer": 3, "exp": "Theo Điều 6 Nghị định 120/2013/NĐ-CP (sửa đổi tại Nghị định 37/2022/NĐ-CP), hành vi này bị phạt tiền từ 15-20 triệu đồng."}, {"id": 10, "q": "Câu 10. Công dân được công nhận hoàn thành nghĩa vụ quân sự tại ngũ trong thời bình, khi đã hoàn thành nhiệm vụ tham gia công an xã liên tục từ đủ", "options": ["A. 18 tháng trở lên.", "B. 36 tháng trở lên.", "C. 24 tháng trở lên.", "D. 30 tháng trở lên."], "answer": 2, "exp": "Theo Điểm c Khoản 4 Điều 4 Luật Nghĩa vụ quân sự 2015: từ đủ 24 tháng trở lên."}, {"id": 11, "q": "Câu 11. Nội dung nào sau đây phản ánh đúng mục tiêu của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Quán triệt đường lối độc lập, tự chủ; đồng thời chủ động tích cực hội nhập quốc tế.", "B. Luôn nhất quán và kiên định mục tiêu độc lập dân tộc gắn liền với chủ nghĩa xã hội.", "C. Bảo vệ vững chắc độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Tổ quốc.", "D. Phát huy cao nhất sức mạnh của dân tộc kết hợp với sức mạnh của thời đại."], "answer": 2, "exp": "Mục tiêu trọng yếu: Bảo vệ vững chắc độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 12, "q": "Câu 12. Theo quy định trong Luật Biển Việt Nam năm 2012: vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm", "options": ["A. đáy biển và lòng đất dưới đáy biển.", "B. thềm lục địa và lòng đất dưới đáy biển.", "C. lãnh hải và vùng tiếp giáp lãnh hải.", "D. vùng nội thủy và tiếp giáp lãnh hải."], "answer": 0, "exp": "Khoản 1 Điều 37 Luật Biển Việt Nam 2012: không bao gồm đáy biển và lòng đất dưới đáy biển."}, {"id": 13, "q": "Câu 13. Nội dung nào sau đây không phản ánh đúng trách nhiệm của công dân trong thực hiện nghĩa vụ quân sự?", "options": ["A. Chấp hành quy định của pháp luật về đăng kí và thực hiện nghĩa vụ quân sự.", "B. Làm sai lệch kết quả phân loại sức khỏe nhằm trốn tránh nghĩa vụ quân sự.", "C. Có mặt đúng thời gian quy định trong giấy gọi khám, kiểm tra sức khỏe.", "D. Ngăn chặn các hành vi vi phạm quy định về đăng kí nghĩa vụ quân sự."], "answer": 1, "exp": "Làm sai lệch kết quả phân loại sức khỏe là hành vi vi phạm pháp luật, bị nghiêm cấm."}, {"id": 14, "q": "Câu 14. Câu ca dao “Thầy đề cho số tảo lao/ Thầy bói nói dựa, chỗ nào cũng ma” phản ánh về loại tệ nạn xã hội nào dưới đây?", "options": ["A. Tệ nạn cờ bạc.", "B. Tệ nạn mại dâm.", "C. Tệ nạn ma túy.", "D. Tệ nạn mê tín dị đoan."], "answer": 3, "exp": "Phản ánh hiện tượng bói toán, ma quỷ vô căn cứ, tức tệ nạn mê tín dị đoan."}, {"id": 15, "q": "Câu 15. “......... Hệ thống các yếu tố cấu thành môi trường cân bằng để bảo đảm điều kiện sống và phát triển của con người cùng các loài sinh vật trong hệ thống đó” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. Bảo vệ môi trường.", "B. Biến đổi khí hậu.", "C. Ô nhiễm môi trường.", "D. An ninh môi trường."], "answer": 3, "exp": "Khoản 8 Điều 3 Luật Bảo vệ môi trường 2020: Định nghĩa An ninh môi trường."}, {"id": 16, "q": "Câu 16. Nguyên nhân chủ yếu gây ô nhiễm môi trường, suy thoái môi trường hay xảy ra sự cố môi trường là do", "options": ["A. núi lửa phun trào.", "B. bão, lũ lụt,...", "C. các nguyên nhân từ tự nhiên.", "D. các hoạt động của con người."], "answer": 3, "exp": "Các hoạt động sản xuất, sinh hoạt của con người là nguyên nhân chủ yếu."}, {"id": 17, "q": "Câu 17. Bất kì thế lực nào có âm mưu và hành động chống phá mục tiêu của Việt Nam trong sự nghiệp xây dựng và bảo vệ Tổ quốc đều là", "options": ["A. đồng minh.", "B. đồng đội.", "C. đối tác.", "D. đối tượng."], "answer": 3, "exp": "Khái niệm \"đối tượng\" trong Chiến lược bảo vệ Tổ quốc."}, {"id": 18, "q": "Câu 18. Vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở, được gọi là", "options": ["A. vùng tiếp giáp lãnh hải.", "B. thềm lục địa.", "C. nội thủy.", "D. vùng đặc quyền kinh tế."], "answer": 3, "exp": "Điều 15 Luật Biển Việt Nam 2012: Vùng đặc quyền kinh tế."}, {"id": 19, "q": "Câu 19. Tệ nạn mê tín dị đoan là các hành vi", "options": ["A. sử dụng trái phép chất ma tuý, nghiện ma tuý, vi phạm pháp luật về ma tuý.", "B. mua dâm, bán dâm và các hành vi khác có liên quan đến mua dâm, bán dâm.", "C. tin vào những điều mơ hồ dẫn đến cuồng tín, hành động trái với chuẩn mực xã hội.", "D. lợi dụng trò chơi để cá cược, sát phạt được thua bằng tiền hoặc lợi ích vật chất khác."], "answer": 2, "exp": "Tin vào những điều mơ hồ dẫn đến cuồng tín, hành động trái chuẩn mực xã hội."}, {"id": 20, "q": "Câu 20. Câu tục ngữ nào sau đây phản ánh về tệ nạn cờ bạc?", "options": ["A. Bói ra ma, quét nhà ra rác.", "B. Đi cuốc đau tay, đi cày mỏi gối.", "C. Nhịn đói nằm co hơn ăn no vác nặng.", "D. Đánh đề ra đê mà ở."], "answer": 3, "exp": "\"Đánh đề ra đê mà ở\" phản ánh trực tiếp tệ nạn cờ bạc, số đề."}, {"id": 21, "q": "Câu 21. Vấn đề nào dưới đây không liên quan đến an ninh môi trường?", "options": ["A. An ninh thông tin.", "B. Dịch bệnh.", "C. Thiên tai.", "D. Di cư tự do."], "answer": 0, "exp": "An ninh thông tin thuộc lĩnh vực an ninh mạng và an ninh truyền thông."}, {"id": 22, "q": "Câu 22. Người nào có chức trách quyết định về: độ tuổi tuyển chọn và ngành nghề cần thiết để tuyển chọn công dân nữ thực hiện nghĩa vụ tham gia Công an nhân dân?", "options": ["A. Bộ trưởng Bộ Quốc phòng.", "B. Chủ tịch nước.", "C. Thủ tướng Chính phủ.", "D. Bộ trưởng Bộ Công an."], "answer": 3, "exp": "Bộ trưởng Bộ Công an có chức trách quyết định theo Khoản 2 Điều 7 Luật CAND 2018."}, {"id": 23, "q": "Câu 23. Trong hồ sơ đăng kí nghĩa vụ quân sự lần đầu cần có", "options": ["A. phiếu tự khai sức khỏe nghĩa vụ quân sự.", "B. sổ hộ khẩu và bản chụp căn cước công dân.", "C. bản chụp giấy khai sinh và sổ hộ khẩu.", "D. giấy chứng nhận đăng kí nghĩa vụ quân sự."], "answer": 0, "exp": "Gồm Phiếu tự khai sức khỏe nghĩa vụ quân sự và bản chụp Giấy khai sinh/CCCD."}, {"id": 24, "q": "Câu 24. Hôm nay nghỉ học, K rủ mấy bạn đến nhà đánh tú lơ khơ ăn tiền. Nếu nhận được lời mời của K, em nên lựa chọn cách ứng xử nào sau đây?", "options": ["A. Đồng ý và rủ thêm các bạn khác cùng tham gia cho vui.", "B. Từ chối và khuyên K không nên thực hiện hành vi đó.", "C. Lập tức đồng ý đến nhà K chơi đánh bài ăn tiền.", "D. Từ chối nhưng vẫn đến nhà K để xem các bạn chơi."], "answer": 1, "exp": "Từ chối và khuyên K không nên thực hiện hành vi vi phạm pháp luật này."}, {"id": 25, "q": "Câu 25. Thuật ngữ nào được đề cập đến trong đoạn trích sau đây: “...... là hoạt động phòng ngừa, hạn chế tác động xấu đến môi trường; ứng phó sự cố môi trường; khắc phục ô nhiễm, suy thoái môi trường, cải thiện chất lượng môi trường; sử dụng hợp lí tài nguyên thiên nhiên, đa dạng sinh học và ứng phó với biến đổi khí hậu” (Khoản 2 Điều 3 Luật Bảo vệ môi trường năm 2020)", "options": ["A. Suy thoái môi trường.", "B. Bảo vệ môi trường.", "C. Sự cố môi trường.", "D. An ninh môi trường."], "answer": 1, "exp": "Khoản 2 Điều 3 Luật Bảo vệ môi trường 2020: Hoạt động bảo vệ môi trường."}, {"id": 26, "q": "Câu 26. Luật Biển Việt Nam năm 2012 bao gồm", "options": ["A. 7 chương với 55 điều.", "B. 320 điều và 9 phụ lục.", "C. 9 chương với 62 điều.", "D. 36 điều và 8 phụ lục."], "answer": 0, "exp": "Gồm 7 chương với 55 điều."}, {"id": 27, "q": "Câu 27. Để bảo vệ môi trường đất, chúng ta nên thực hiện biện pháp nào sau đây?", "options": ["A. Tăng diện tích đất canh tác bằng các hành động: đốt nương làm rẫy.", "B. Khai thác triệt để tài nguyên rừng để lấy gỗ phục vụ cho đời sống sản xuất.", "C. Lạm dụng thuốc bảo vệ thực vật và phân bón hóa học trong sản xuất.", "D. Nâng cao ý thức trách nhiệm bảo vệ môi trường đất của cộng đồng cư dân."], "answer": 3, "exp": "Nâng cao ý thức trách nhiệm bảo vệ môi trường đất của cộng đồng cư dân."}, {"id": 28, "q": "Câu 28. Hiện tượng nào sau đây không phải là biểu hiện của biến đổi khí hậu?", "options": ["A. Suy giảm đa dạng sinh học.", "B. Nhiệt độ trung bình trên Trái Đất giảm.", "C. Tăng các hiện tượng thời tiết cực đoan (bão, lũ lụt,...).", "D. Băng tan, nước biển dâng, xâm nhập mặn."], "answer": 1, "exp": "Thực tế biến đổi khí hậu là sự gia tăng nhiệt độ trung bình toàn cầu (nóng lên toàn cầu)."}]}, "110": {"title": "Mã đề 110", "student": "Nguyễn Thu Thủy - Lớp 11B2", "questions": [{"id": 1, "q": "Câu 1. Hành vi gian dối làm sai lệch kết quả phân loại sức khỏe của mình nhằm trốn tránh nghĩa vụ quân sự sẽ bị xử phạt bằng hình thức nào sau đây?", "options": ["A. Tù không thời hạn.", "B. Cải tạo không giam giữ.", "C. Phạt tiền.", "D. Tù có thời hạn."], "answer": 2, "exp": "Theo Nghị định 120/2013/NĐ-CP (sửa đổi tại Nghị định 37/2022/NĐ-CP), hành vi gian dối làm sai lệch kết quả phân loại sức khỏe bị xử phạt vi phạm hành chính bằng hình thức phạt tiền."}, {"id": 2, "q": "Câu 2. Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ", "options": ["A. ranh giới ngoài thềm lục địa.", "B. đường cơ sở ra phía biển.", "C. ranh giới ngoài của lãnh hải.", "D. vùng nội thủy ra phía biển."], "answer": 1, "exp": "Theo Điều 11 Luật Biển Việt Nam 2012, Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ đường cơ sở ra phía biển."}, {"id": 3, "q": "Câu 3. Hồ sơ đăng kí nghĩa vụ tham gia Công an nhân dân cần có loại giấy tờ nào sau đây?", "options": ["A. Sổ hộ khẩu, giấy khai sinh hoặc bản chụp căn cước công dân.", "B. Bản chụp căn cước công dân hoặc giấy chứng minh nhân dân.", "C. Tờ khai đăng kí thực hiện nghĩa vụ tham gia Công an nhân dân.", "D. Giấy khai sinh và phiếu tự khai sức khỏe nghĩa vụ quân sự."], "answer": 3, "exp": "Theo quy định, hồ sơ đăng ký NVQS lần đầu bao gồm Phiếu tự khai sức khỏe nghĩa vụ quân sự và bản chụp Giấy khai sinh/CCCD."}, {"id": 4, "q": "Câu 4. Theo quy định trong Luật Biển Việt Nam năm 2012: vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm", "options": ["A. lãnh hải và vùng tiếp giáp lãnh hải.", "B. đáy biển và lòng đất dưới đáy biển.", "C. vùng nội thủy và tiếp giáp lãnh hải.", "D. thềm lục địa và lòng đất dưới đáy biển."], "answer": 1, "exp": "Theo Khoản 1 Điều 37 Luật Biển Việt Nam 2012: Vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm đáy biển và lòng đất dưới đáy biển."}, {"id": 5, "q": "Câu 5. Để bảo vệ môi trường đất, chúng ta nên thực hiện biện pháp nào sau đây?", "options": ["A. Nâng cao ý thức trách nhiệm bảo vệ môi trường đất của cộng đồng cư dân.", "B. Tăng diện tích đất canh tác bằng các hành động: đốt nương làm rẫy.", "C. Khai thác triệt để tài nguyên rừng để lấy gỗ phục vụ cho đời sống sản xuất.", "D. Lạm dụng thuốc bảo vệ thực vật và phân bón hóa học trong sản xuất."], "answer": 0, "exp": "Nâng cao ý thức trách nhiệm của cộng đồng là giải pháp căn bản, bền vững hàng đầu để bảo vệ và chống thoái hóa môi trường đất."}, {"id": 6, "q": "Câu 6. “......... Hệ thống các yếu tố cấu thành môi trường cân bằng để bảo đảm điều kiện sống và phát triển của con người cùng các loài sinh vật trong hệ thống đó” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. Biến đổi khí hậu.", "B. An ninh môi trường.", "C. Bảo vệ môi trường.", "D. Ô nhiễm môi trường."], "answer": 1, "exp": "Theo Khoản 8 Điều 3 Luật Bảo vệ môi trường 2020: An ninh môi trường là hệ thống các yếu tố cấu thành môi trường cân bằng để bảo đảm điều kiện sống và phát triển của con người cùng các loài sinh vật trong hệ thống đó."}, {"id": 7, "q": "Câu 7. Bất kì thế lực nào có âm mưu và hành động chống phá mục tiêu của Việt Nam trong sự nghiệp xây dựng và bảo vệ Tổ quốc đều là", "options": ["A. đối tác.", "B. đồng đội.", "C. đối tượng.", "D. đồng minh."], "answer": 2, "exp": "Trong Chiến lược bảo vệ Tổ quốc: Những ai tôn trọng độc lập, chủ quyền, hợp tác bình đẳng cùng có lợi là đối tác; bất kì thế lực nào có âm mưu, hành động chống phá mục tiêu của ta đều là đối tượng."}, {"id": 8, "q": "Câu 8. Vấn đề nào dưới đây không liên quan đến an ninh môi trường?", "options": ["A. Di cư tự do.", "B. Thiên tai.", "C. An ninh thông tin.", "D. Dịch bệnh."], "answer": 2, "exp": "An ninh thông tin thuộc lĩnh vực an ninh mạng và an ninh truyền thông, không thuộc nhóm an ninh môi trường (gồm thiên tai, dịch bệnh, di cư tự do do biến đổi môi trường...)."}, {"id": 9, "q": "Câu 9. Thuật ngữ nào được đề cập đến trong đoạn trích sau đây: “....... là hoạt động phòng ngừa, hạn chế tác động xấu đến môi trường; ứng phó sự cố môi trường; khắc phục ô nhiễm, suy thoái môi trường, cải thiện chất lượng môi trường; sử dụng hợp lí tài nguyên thiên nhiên, đa dạng sinh học và ứng phó với biến đổi khí hậu” (Khoản 2 Điều 3 Luật Bảo vệ môi trường năm 2020)", "options": ["A. An ninh môi trường.", "B. Sự cố môi trường.", "C. Suy thoái môi trường.", "D. Bảo vệ môi trường."], "answer": 3, "exp": "Đoạn trích dẫn nguyên văn định nghĩa về \"Hoạt động bảo vệ môi trường\" tại Khoản 2 Điều 3 Luật Bảo vệ môi trường 2020."}, {"id": 10, "q": "Câu 10. Luật Biển Việt Nam năm 2012 bao gồm", "options": ["A. 9 chương với 62 điều.", "B. 320 điều và 9 phụ lục.", "C. 36 điều và 8 phụ lục.", "D. 7 chương với 55 điều."], "answer": 3, "exp": "Luật Biển Việt Nam được Quốc hội khóa XIII thông qua ngày 21/6/2012, có hiệu lực từ 1/1/2013, gồm 7 chương với 55 điều."}, {"id": 11, "q": "Câu 11. Nội dung nào sau đây phản ánh đúng tiêu chuẩn tuyển chọn công dân thực hiện nghĩa vụ tham gia công an nhân dân?", "options": ["A. Thể hình cân đối, không dị hình, dị dạng.", "B. Đang bị truy cứu trách nhiệm hình sự.", "C. Tốt nghiệp THPT đối với công dân các xã miền núi.", "D. Công dân đã có tiền án, tiền sự."], "answer": 0, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 12, "q": "Câu 12. Tệ nạn mê tín dị đoan là các hành vi", "options": ["A. lợi dụng trò chơi để cá cược, sát phạt được thua bằng tiền hoặc lợi ích vật chất khác.", "B. sử dụng trái phép chất ma tuý, nghiện ma tuý, vi phạm pháp luật về ma tuý.", "C. mua dâm, bán dâm và các hành vi khác có liên quan đến mua dâm, bán dâm.", "D. tin vào những điều mơ hồ dẫn đến cuồng tín, hành động trái với chuẩn mực xã hội."], "answer": 3, "exp": "Tệ nạn mê tín dị đoan là hành vi tin vào những điều mơ hồ, nhảm nhí, không có thật dẫn đến cuồng tín, mù quáng và hành động trái với chuẩn mực đạo đức, pháp luật."}, {"id": 13, "q": "Câu 13. Trong hồ sơ đăng kí nghĩa vụ quân sự lần đầu cần có", "options": ["A. sổ hộ khẩu và bản chụp căn cước công dân.", "B. phiếu tự khai sức khỏe nghĩa vụ quân sự.", "C. giấy chứng nhận đăng kí nghĩa vụ quân sự.", "D. bản chụp giấy khai sinh và sổ hộ khẩu."], "answer": 1, "exp": "Theo quy định, hồ sơ đăng ký NVQS lần đầu bao gồm Phiếu tự khai sức khỏe nghĩa vụ quân sự và bản chụp Giấy khai sinh/CCCD."}, {"id": 14, "q": "Câu 14. Hành vi đánh bạc trái phép chưa đến mức truy cứu trách nhiệm hình sự sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt tù có thời hạn.", "B. Phạt vi phạm hành chính, tù.", "C. Phạt cải tạo không giam giữ.", "D. Phạt vi phạm hành chính."], "answer": 3, "exp": "Đánh bạc trái phép chưa đến mức truy cứu TNHS (dưới 5 triệu đồng và không thuộc trường hợp tái phạm/có tiền án tiền sự) sẽ bị xử phạt vi phạm hành chính theo Điều 28 Nghị định 144/2021/NĐ-CP."}, {"id": 15, "q": "Câu 15. Vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở, được gọi là", "options": ["A. vùng đặc quyền kinh tế.", "B. nội thủy.", "C. vùng tiếp giáp lãnh hải.", "D. thềm lục địa."], "answer": 0, "exp": "Theo Điều 15 Luật Biển Việt Nam 2012, Vùng đặc quyền kinh tế là vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở."}, {"id": 16, "q": "Câu 16. Ranh giới ngoài thềm lục địa cách đường cơ sở không quá", "options": ["A. 200 hải lí.", "B. 10 hải lí.", "C. 350 hải lí.", "D. 12 hải lí."], "answer": 2, "exp": "Theo Khoản 2 Điều 17 Luật Biển Việt Nam 2012: Ranh giới ngoài của thềm lục địa cách đường cơ sở không quá 350 hải lí (hoặc không quá 100 hải lí kể từ đường đẳng sâu 2.500m)."}, {"id": 17, "q": "Câu 17. Nội dung nào sau đây không phản ánh đúng trách nhiệm của công dân trong thực hiện nghĩa vụ quân sự?", "options": ["A. Ngăn chặn các hành vi vi phạm quy định về đăng kí nghĩa vụ quân sự.", "B. Làm sai lệch kết quả phân loại sức khỏe nhằm trốn tránh nghĩa vụ quân sự.", "C. Chấp hành quy định của pháp luật về đăng kí và thực hiện nghĩa vụ quân sự.", "D. Có mặt đúng thời gian quy định trong giấy gọi khám, kiểm tra sức khỏe."], "answer": 0, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 18, "q": "Câu 18. Công dân được công nhận hoàn thành nghĩa vụ quân sự tại ngũ trong thời bình, khi đã hoàn thành nhiệm vụ tham gia công an xã liên tục từ đủ", "options": ["A. 30 tháng trở lên.", "B. 36 tháng trở lên.", "C. 18 tháng trở lên.", "D. 24 tháng trở lên."], "answer": 3, "exp": "Theo Điểm c Khoản 4 Điều 4 Luật Nghĩa vụ quân sự 2015, thời gian hoàn thành nhiệm vụ tham gia Công an xã liên tục từ đủ 24 tháng trở lên được công nhận hoàn thành NVQS tại ngũ trong thời bình."}, {"id": 19, "q": "Câu 19. Nguyên nhân chủ yếu gây ô nhiễm môi trường, suy thoái môi trường hay xảy ra sự cố môi trường là do", "options": ["A. núi lửa phun trào.", "B. các hoạt động của con người.", "C. các nguyên nhân từ tự nhiên.", "D. bão, lũ lụt,..."], "answer": 1, "exp": "Tuy tự nhiên có gây ra một số tác động, nhưng các hoạt động sản xuất, sinh hoạt và khai thác tài nguyên thiếu bền vững của con người là nguyên nhân chủ yếu và trực tiếp nhất."}, {"id": 20, "q": "Câu 20. Người nào có chức trách quyết định về: độ tuổi tuyển chọn và ngành nghề cần thiết để tuyển chọn công dân nữ thực hiện nghĩa vụ tham gia Công an nhân dân?", "options": ["A. Chủ tịch nước.", "B. Bộ trưởng Bộ Quốc phòng.", "C. Thủ tướng Chính phủ.", "D. Bộ trưởng Bộ Công an."], "answer": 3, "exp": "Theo Luật Công an nhân dân 2018 và Nghị định 70/2019/NĐ-CP, Bộ trưởng Bộ Công an có thẩm quyền quy định cụ thể độ tuổi và ngành nghề chuyên môn cần thiết để tuyển chọn công dân nữ tham gia CAND."}, {"id": 21, "q": "Câu 21. Nội dung nào sau đây không phản ánh đúng quan điểm chỉ đạo của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Giữ vững sự lãnh đạo trực tiếp, tuyệt đối về mọi mặt của Đảng.", "B. Giữ vững môi trường hòa bình, ổn định để phát triển kinh tế - xã hội.", "C. Kết hợp chặt chẽ hai nhiệm vụ chiến lược xây dựng và bảo vệ Tổ quốc.", "D. Chỉ chú trọng xây dựng sức mạnh của đất nước về văn hóa - xã hội."], "answer": 0, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 22, "q": "Câu 22. Hôm nay nghỉ học, K rủ mấy bạn đến nhà đánh tú lơ khơ ăn tiền. Nếu nhận được lời mời của K, em nên lựa chọn cách ứng xử nào sau đây?", "options": ["A. Từ chối nhưng vẫn đến nhà K để xem các bạn chơi.", "B. Từ chối và khuyên K không nên thực hiện hành vi đó.", "C. Lập tức đồng ý đến nhà K chơi đánh bài ăn tiền.", "D. Đồng ý và rủ thêm các bạn khác cùng tham gia cho vui."], "answer": 1, "exp": "Đánh bài ăn tiền là hành vi vi phạm pháp luật về tệ nạn cờ bạc. Khi được rủ rê, học sinh cần kiên quyết từ chối và khuyên can bạn không tham gia."}, {"id": 23, "q": "Câu 23. Câu ca dao “Thầy đề cho số tảo lao/ Thầy bói nói dựa, chỗ nào cũng ma” phản ánh về loại tệ nạn xã hội nào dưới đây?", "options": ["A. Tệ nạn ma túy.", "B. Tệ nạn mê tín dị đoan.", "C. Tệ nạn cờ bạc.", "D. Tệ nạn mại dâm."], "answer": 1, "exp": "Câu ca dao châm biếm hiện tượng bói toán, tin vào ma quỷ vô căn cứ, phản ánh trực tiếp tệ nạn mê tín dị đoan."}, {"id": 24, "q": "Câu 24. Nội dung nào sau đây phản ánh đúng mục tiêu của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Quán triệt đường lối độc lập, tự chủ; đồng thời chủ động tích cực hội nhập quốc tế.", "B. Bảo vệ vững chắc độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Tổ quốc.", "C. Luôn nhất quán và kiên định mục tiêu độc lập dân tộc gắn liền với chủ nghĩa xã hội.", "D. Phát huy cao nhất sức mạnh của dân tộc kết hợp với sức mạnh của thời đại."], "answer": 1, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 25, "q": "Câu 25. Hiện tượng nào sau đây không phải là biểu hiện của biến đổi khí hậu?", "options": ["A. Suy giảm đa dạng sinh học.", "B. Tăng các hiện tượng thời tiết cực đoan (bão, lũ lụt,...).", "C. Nhiệt độ trung bình trên Trái Đất giảm.", "D. Băng tan, nước biển dâng, xâm nhập mặn."], "answer": 2, "exp": "Biến đổi khí hậu toàn cầu hiện nay gắn liền với hiện tượng nóng lên toàn cầu, tức là nhiệt độ trung bình trên Trái Đất tăng lên, không phải giảm."}, {"id": 26, "q": "Câu 26. Những cá nhân, tổ chức có hành vi tham gia hoạt động mê tín dị đoan, tổ chức hoạt động mê tín dị đoan trong lễ hội... sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt cải tạo không giam giữ.", "B. Phạt tù có thời hạn.", "C. Phạt vi phạm hành chính.", "D. Phạt tù chung thân."], "answer": 2, "exp": "Theo Nghị định 38/2021/NĐ-CP, hành vi tham gia hoặc tổ chức hoạt động mê tín dị đoan trong lễ hội bị xử phạt vi phạm hành chính bằng tiền và buộc khắc phục hậu quả."}, {"id": 27, "q": "Câu 27. Câu tục ngữ nào sau đây phản ánh về tệ nạn cờ bạc?", "options": ["A. Đánh đề ra đê mà ở.", "B. Đi cuốc đau tay, đi cày mỏi gối.", "C. Bói ra ma, quét nhà ra rác.", "D. Nhịn đói nằm co hơn ăn no vác nặng."], "answer": 0, "exp": "\"Đánh đề ra đê mà ở\" là câu tục ngữ dân gian đúc kết cảnh báo hậu quả tán gia bại sản của tệ nạn cờ bạc, số đề."}, {"id": 28, "q": "Câu 28. “Sự suy giảm về số lượng, chất lượng của thành phần môi trường, gây ảnh hưởng xấu đến sức khỏe con người, sinh vật tự nhiên” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. Sự cố môi trường.", "B. Biến đổi khí hậu.", "C. Ô nhiễm môi trường.", "D. Suy thoái môi trường."], "answer": 3, "exp": "Theo Khoản 7 Điều 3 Luật Bảo vệ môi trường 2020: Suy thoái môi trường là sự suy giảm về số lượng, chất lượng của thành phần môi trường, gây ảnh hưởng xấu đến sức khỏe con người, sinh vật, tự nhiên."}]}, "113": {"title": "Mã đề 113", "student": "Nguyễn Nhã Phương - Lớp 11B2", "questions": [{"id": 1, "q": "Câu 1. Nội dung nào sau đây phản ánh đúng mục tiêu của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Phát huy cao nhất sức mạnh của dân tộc kết hợp với sức mạnh của thời đại.", "B. Bảo vệ vững chắc độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ của Tổ quốc.", "C. Luôn nhất quán và kiên định mục tiêu độc lập dân tộc gắn liền với chủ nghĩa xã hội.", "D. Quán triệt đường lối độc lập, tự chủ; đồng thời chủ động tích cực hội nhập quốc tế."], "answer": 1, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 2, "q": "Câu 2. Nguyên nhân chủ yếu gây ô nhiễm môi trường, suy thoái môi trường hay xảy ra sự cố môi trường là do", "options": ["A. núi lửa phun trào.", "B. các nguyên nhân từ tự nhiên.", "C. bão, lũ lụt,...", "D. các hoạt động của con người."], "answer": 3, "exp": "Tuy tự nhiên có gây ra một số tác động, nhưng các hoạt động sản xuất, sinh hoạt và khai thác tài nguyên thiếu bền vững của con người là nguyên nhân chủ yếu và trực tiếp nhất."}, {"id": 3, "q": "Câu 3. Nội dung nào sau đây phản ánh đúng tiêu chuẩn tuyển chọn công dân thực hiện nghĩa vụ tham gia công an nhân dân?", "options": ["A. Công dân đã có tiền án, tiền sự.", "B. Thể hình cân đối, không dị hình, dị dạng.", "C. Tốt nghiệp THPT đối với công dân các xã miền núi.", "D. Đang bị truy cứu trách nhiệm hình sự."], "answer": 0, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 4, "q": "Câu 4. Hiện tượng nào sau đây không phải là biểu hiện của biến đổi khí hậu?", "options": ["A. Băng tan, nước biển dâng, xâm nhập mặn.", "B. Tăng các hiện tượng thời tiết cực đoan (bão, lũ lụt,...).", "C. Nhiệt độ trung bình trên Trái Đất giảm.", "D. Suy giảm đa dạng sinh học."], "answer": 2, "exp": "Biến đổi khí hậu toàn cầu hiện nay gắn liền với hiện tượng nóng lên toàn cầu, tức là nhiệt độ trung bình trên Trái Đất tăng lên, không phải giảm."}, {"id": 5, "q": "Câu 5. Tệ nạn mê tín dị đoan là các hành vi", "options": ["A. lợi dụng trò chơi để cá cược, sát phạt được thua bằng tiền hoặc lợi ích vật chất khác.", "B. mua dâm, bán dâm và các hành vi khác có liên quan đến mua dâm, bán dâm.", "C. sử dụng trái phép chất ma tuý, nghiện ma tuý, vi phạm pháp luật về ma tuý.", "D. tin vào những điều mơ hồ dẫn đến cuồng tín, hành động trái với chuẩn mực xã hội."], "answer": 3, "exp": "Tệ nạn mê tín dị đoan là hành vi tin vào những điều mơ hồ, nhảm nhí, không có thật dẫn đến cuồng tín, mù quáng và hành động trái với chuẩn mực đạo đức, pháp luật."}, {"id": 6, "q": "Câu 6. Công dân được công nhận hoàn thành nghĩa vụ quân sự tại ngũ trong thời bình, khi đã hoàn thành nhiệm vụ tham gia công an xã liên tục từ đủ", "options": ["A. 18 tháng trở lên.", "B. 36 tháng trở lên.", "C. 30 tháng trở lên.", "D. 24 tháng trở lên."], "answer": 3, "exp": "Theo Điểm c Khoản 4 Điều 4 Luật Nghĩa vụ quân sự 2015, thời gian hoàn thành nhiệm vụ tham gia Công an xã liên tục từ đủ 24 tháng trở lên được công nhận hoàn thành NVQS tại ngũ trong thời bình."}, {"id": 7, "q": "Câu 7. Vấn đề nào dưới đây không liên quan đến an ninh môi trường?", "options": ["A. Dịch bệnh.", "B. Thiên tai.", "C. An ninh thông tin.", "D. Di cư tự do."], "answer": 2, "exp": "An ninh thông tin thuộc lĩnh vực an ninh mạng và an ninh truyền thông, không thuộc nhóm an ninh môi trường (gồm thiên tai, dịch bệnh, di cư tự do do biến đổi môi trường...)."}, {"id": 8, "q": "Câu 8. Câu tục ngữ nào sau đây phản ánh về tệ nạn cờ bạc?", "options": ["A. Đánh đề ra đê mà ở.", "B. Bói ra ma, quét nhà ra rác.", "C. Nhịn đói nằm co hơn ăn no vác nặng.", "D. Đi cuốc đau tay, đi cày mỏi gối."], "answer": 0, "exp": "\"Đánh đề ra đê mà ở\" là câu tục ngữ dân gian đúc kết cảnh báo hậu quả tán gia bại sản của tệ nạn cờ bạc, số đề."}, {"id": 9, "q": "Câu 9. Luật Biển Việt Nam năm 2012 bao gồm", "options": ["A. 7 chương với 55 điều.", "B. 320 điều và 9 phụ lục.", "C. 36 điều và 8 phụ lục.", "D. 9 chương với 62 điều."], "answer": 0, "exp": "Luật Biển Việt Nam được Quốc hội khóa XIII thông qua ngày 21/6/2012, có hiệu lực từ 1/1/2013, gồm 7 chương với 55 điều."}, {"id": 10, "q": "Câu 10. Hành vi đánh bạc trái phép chưa đến mức truy cứu trách nhiệm hình sự sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt vi phạm hành chính.", "B. Phạt cải tạo không giam giữ.", "C. Phạt vi phạm hành chính, tù.", "D. Phạt tù có thời hạn."], "answer": 0, "exp": "Đánh bạc trái phép chưa đến mức truy cứu TNHS (dưới 5 triệu đồng và không thuộc trường hợp tái phạm/có tiền án tiền sự) sẽ bị xử phạt vi phạm hành chính theo Điều 28 Nghị định 144/2021/NĐ-CP."}, {"id": 11, "q": "Câu 11. Người nào có chức trách quyết định về: độ tuổi tuyển chọn và ngành nghề cần thiết để tuyển chọn công dân nữ thực hiện nghĩa vụ tham gia Công an nhân dân?", "options": ["A. Chủ tịch nước.", "B. Thủ tướng Chính phủ.", "C. Bộ trưởng Bộ Quốc phòng.", "D. Bộ trưởng Bộ Công an."], "answer": 3, "exp": "Theo Luật Công an nhân dân 2018 và Nghị định 70/2019/NĐ-CP, Bộ trưởng Bộ Công an có thẩm quyền quy định cụ thể độ tuổi và ngành nghề chuyên môn cần thiết để tuyển chọn công dân nữ tham gia CAND."}, {"id": 12, "q": "Câu 12. Những cá nhân, tổ chức có hành vi tham gia hoạt động mê tín dị đoan, tổ chức hoạt động mê tín dị đoan trong lễ hội... sẽ bị xử phạt theo hình thức nào sau đây?", "options": ["A. Phạt tù chung thân.", "B. Phạt vi phạm hành chính.", "C. Phạt cải tạo không giam giữ.", "D. Phạt tù có thời hạn."], "answer": 1, "exp": "Theo Nghị định 38/2021/NĐ-CP, hành vi tham gia hoặc tổ chức hoạt động mê tín dị đoan trong lễ hội bị xử phạt vi phạm hành chính bằng tiền và buộc khắc phục hậu quả."}, {"id": 13, "q": "Câu 13. Hồ sơ đăng kí nghĩa vụ tham gia Công an nhân dân cần có loại giấy tờ nào sau đây?", "options": ["A. Sổ hộ khẩu, giấy khai sinh hoặc bản chụp căn cước công dân.", "B. Tờ khai đăng kí thực hiện nghĩa vụ tham gia Công an nhân dân.", "C. Bản chụp căn cước công dân hoặc giấy chứng minh nhân dân.", "D. Giấy khai sinh và phiếu tự khai sức khỏe nghĩa vụ quân sự."], "answer": 3, "exp": "Theo quy định, hồ sơ đăng ký NVQS lần đầu bao gồm Phiếu tự khai sức khỏe nghĩa vụ quân sự và bản chụp Giấy khai sinh/CCCD."}, {"id": 14, "q": "Câu 14. Ranh giới ngoài thềm lục địa cách đường cơ sở không quá", "options": ["A. 200 hải lí.", "B. 12 hải lí.", "C. 10 hải lí.", "D. 350 hải lí."], "answer": 3, "exp": "Theo Khoản 2 Điều 17 Luật Biển Việt Nam 2012: Ranh giới ngoài của thềm lục địa cách đường cơ sở không quá 350 hải lí (hoặc không quá 100 hải lí kể từ đường đẳng sâu 2.500m)."}, {"id": 15, "q": "Câu 15. Theo quy định trong Luật Biển Việt Nam năm 2012: vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm", "options": ["A. đáy biển và lòng đất dưới đáy biển.", "B. vùng nội thủy và tiếp giáp lãnh hải.", "C. thềm lục địa và lòng đất dưới đáy biển.", "D. lãnh hải và vùng tiếp giáp lãnh hải."], "answer": 0, "exp": "Theo Khoản 1 Điều 37 Luật Biển Việt Nam 2012: Vùng biển quốc tế là tất cả các vùng biển nằm ngoài vùng đặc quyền kinh tế của Việt Nam và các quốc gia khác, nhưng không bao gồm đáy biển và lòng đất dưới đáy biển."}, {"id": 16, "q": "Câu 16. Vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở, được gọi là", "options": ["A. nội thủy.", "B. vùng đặc quyền kinh tế.", "C. vùng tiếp giáp lãnh hải.", "D. thềm lục địa."], "answer": 1, "exp": "Theo Điều 15 Luật Biển Việt Nam 2012, Vùng đặc quyền kinh tế là vùng biển tiếp liền và nằm ngoài lãnh hải Việt Nam, hợp với lãnh hải thành một vùng biển có chiều rộng 200 hải lí tính từ đường cơ sở."}, {"id": 17, "q": "Câu 17. Hành vi gian dối làm sai lệch kết quả phân loại sức khỏe của mình nhằm trốn tránh nghĩa vụ quân sự sẽ bị xử phạt bằng hình thức nào sau đây?", "options": ["A. Tù có thời hạn.", "B. Cải tạo không giam giữ.", "C. Phạt tiền.", "D. Tù không thời hạn."], "answer": 2, "exp": "Theo Nghị định 120/2013/NĐ-CP (sửa đổi tại Nghị định 37/2022/NĐ-CP), hành vi gian dối làm sai lệch kết quả phân loại sức khỏe bị xử phạt vi phạm hành chính bằng hình thức phạt tiền."}, {"id": 18, "q": "Câu 18. Để bảo vệ môi trường đất, chúng ta nên thực hiện biện pháp nào sau đây?", "options": ["A. Lạm dụng thuốc bảo vệ thực vật và phân bón hóa học trong sản xuất.", "B. Nâng cao ý thức trách nhiệm bảo vệ môi trường đất của cộng đồng cư dân.", "C. Tăng diện tích đất canh tác bằng các hành động: đốt nương làm rẫy.", "D. Khai thác triệt để tài nguyên rừng để lấy gỗ phục vụ cho đời sống sản xuất."], "answer": 1, "exp": "Nâng cao ý thức trách nhiệm của cộng đồng là giải pháp căn bản, bền vững hàng đầu để bảo vệ và chống thoái hóa môi trường đất."}, {"id": 19, "q": "Câu 19. Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ", "options": ["A. đường cơ sở ra phía biển.", "B. ranh giới ngoài thềm lục địa.", "C. ranh giới ngoài của lãnh hải.", "D. vùng nội thủy ra phía biển."], "answer": 0, "exp": "Theo Điều 11 Luật Biển Việt Nam 2012, Lãnh hải là vùng biển có chiều rộng 12 hải lí tính từ đường cơ sở ra phía biển."}, {"id": 20, "q": "Câu 20. Trong hồ sơ đăng kí nghĩa vụ quân sự lần đầu cần có", "options": ["A. phiếu tự khai sức khỏe nghĩa vụ quân sự.", "B. sổ hộ khẩu và bản chụp căn cước công dân.", "C. bản chụp giấy khai sinh và sổ hộ khẩu.", "D. giấy chứng nhận đăng kí nghĩa vụ quân sự."], "answer": 0, "exp": "Theo quy định, hồ sơ đăng ký NVQS lần đầu bao gồm Phiếu tự khai sức khỏe nghĩa vụ quân sự và bản chụp Giấy khai sinh/CCCD."}, {"id": 21, "q": "Câu 21. “......... Hệ thống các yếu tố cấu thành môi trường cân bằng để bảo đảm điều kiện sống và phát triển của con người cùng các loài sinh vật trong hệ thống đó” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. An ninh môi trường.", "B. Biến đổi khí hậu.", "C. Bảo vệ môi trường.", "D. Ô nhiễm môi trường."], "answer": 0, "exp": "Theo Khoản 8 Điều 3 Luật Bảo vệ môi trường 2020: An ninh môi trường là hệ thống các yếu tố cấu thành môi trường cân bằng để bảo đảm điều kiện sống và phát triển của con người cùng các loài sinh vật trong hệ thống đó."}, {"id": 22, "q": "Câu 22. Nội dung nào sau đây không phản ánh đúng quan điểm chỉ đạo của Đảng về Chiến lược bảo vệ Tổ quốc Việt Nam xã hội chủ nghĩa trong tình hình mới?", "options": ["A. Chỉ chú trọng xây dựng sức mạnh của đất nước về văn hóa - xã hội.", "B. Giữ vững sự lãnh đạo trực tiếp, tuyệt đối về mọi mặt của Đảng.", "C. Giữ vững môi trường hòa bình, ổn định để phát triển kinh tế - xã hội.", "D. Kết hợp chặt chẽ hai nhiệm vụ chiến lược xây dựng và bảo vệ Tổ quốc."], "answer": 0, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 23, "q": "Câu 23. Thuật ngữ nào được đề cập đến trong đoạn trích sau đây: “...... là hoạt động phòng ngừa, hạn chế tác động xấu đến môi trường; ứng phó sự cố môi trường; khắc phục ô nhiễm, suy thoái môi trường, cải thiện chất lượng môi trường; sử dụng hợp lí tài nguyên thiên nhiên, đa dạng sinh học và ứng phó với biến đổi khí hậu” (Khoản 2 Điều 3 Luật Bảo vệ môi trường năm 2020)", "options": ["A. Sự cố môi trường.", "B. An ninh môi trường.", "C. Bảo vệ môi trường.", "D. Suy thoái môi trường."], "answer": 2, "exp": "Đoạn trích dẫn nguyên văn định nghĩa về \"Hoạt động bảo vệ môi trường\" tại Khoản 2 Điều 3 Luật Bảo vệ môi trường 2020."}, {"id": 24, "q": "Câu 24. “Sự suy giảm về số lượng, chất lượng của thành phần môi trường, gây ảnh hưởng xấu đến sức khỏe con người, sinh vật tự nhiên” – đó là nội dung của khái niệm nào sau đây?", "options": ["A. Sự cố môi trường.", "B. Suy thoái môi trường.", "C. Biến đổi khí hậu.", "D. Ô nhiễm môi trường."], "answer": 1, "exp": "Theo Khoản 7 Điều 3 Luật Bảo vệ môi trường 2020: Suy thoái môi trường là sự suy giảm về số lượng, chất lượng của thành phần môi trường, gây ảnh hưởng xấu đến sức khỏe con người, sinh vật, tự nhiên."}, {"id": 25, "q": "Câu 25. Nội dung nào sau đây không phản ánh đúng trách nhiệm của công dân trong thực hiện nghĩa vụ quân sự?", "options": ["A. Làm sai lệch kết quả phân loại sức khỏe nhằm trốn tránh nghĩa vụ quân sự.", "B. Có mặt đúng thời gian quy định trong giấy gọi khám, kiểm tra sức khỏe.", "C. Chấp hành quy định của pháp luật về đăng kí và thực hiện nghĩa vụ quân sự.", "D. Ngăn chặn các hành vi vi phạm quy định về đăng kí nghĩa vụ quân sự."], "answer": 0, "exp": "Mục tiêu trọng yếu hàng đầu của Chiến lược bảo vệ Tổ quốc trong tình hình mới là bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ của Tổ quốc."}, {"id": 26, "q": "Câu 26. Bất kì thế lực nào có âm mưu và hành động chống phá mục tiêu của Việt Nam trong sự nghiệp xây dựng và bảo vệ Tổ quốc đều là", "options": ["A. đồng minh.", "B. đối tác.", "C. đồng đội.", "D. đối tượng."], "answer": 3, "exp": "Trong Chiến lược bảo vệ Tổ quốc: Những ai tôn trọng độc lập, chủ quyền, hợp tác bình đẳng cùng có lợi là đối tác; bất kì thế lực nào có âm mưu, hành động chống phá mục tiêu của ta đều là đối tượng."}, {"id": 27, "q": "Câu 27. Câu ca dao “Thầy đề cho số tảo lao/ Thầy bói nói dựa, chỗ nào cũng ma” phản ánh về loại tệ nạn xã hội nào dưới đây?", "options": ["A. Tệ nạn ma túy.", "B. Tệ nạn cờ bạc.", "C. Tệ nạn mại dâm.", "D. Tệ nạn mê tín dị đoan."], "answer": 3, "exp": "Câu ca dao châm biếm hiện tượng bói toán, tin vào ma quỷ vô căn cứ, phản ánh trực tiếp tệ nạn mê tín dị đoan."}, {"id": 28, "q": "Câu 28. Hôm nay nghỉ học, K rủ mấy bạn đến nhà đánh tú lơ khơ ăn tiền. Nếu nhận được lời mời của K, em nên lựa chọn cách ứng xử nào sau đây?", "options": ["A. Lập tức đồng ý đến nhà K chơi đánh bài ăn tiền.", "B. Từ chối và khuyên K không nên thực hiện hành vi đó.", "C. Từ chối nhưng vẫn đến nhà K để xem các bạn chơi.", "D. Đồng ý và rủ thêm các bạn khác cùng tham gia cho vui."], "answer": 1, "exp": "Đánh bài ăn tiền là hành vi vi phạm pháp luật về tệ nạn cờ bạc. Khi được rủ rê, học sinh cần kiên quyết từ chối và khuyên can bạn không tham gia."}]}};
+
+    let currentExamCode = '112';
+    let userAnswers = {}; // questionId -> selectedIndex
+    let timerSeconds = 45 * 60;
+    let timerInterval = null;
+
+    // DOM Elements
+    const qContainer = document.getElementById('questions-container');
+    
+    const matrixContainer = document.getElementById('question-matrix');
+    const timerDisplay = document.getElementById('timer-display');
+    const statCorrect = document.getElementById('stat-correct');
+    const statWrong = document.getElementById('stat-wrong');
+    const statRemaining = document.getElementById('stat-remaining');
+    const statScore = document.getElementById('stat-score');
+    const progressFill = document.getElementById('progress-fill');
+    const bannerTag = document.getElementById('banner-tag');
+    const bannerStudent = document.getElementById('banner-student');
+    const modalSummary = document.getElementById('modal-summary');
+
+    // Init App
+    window.addEventListener('DOMContentLoaded', () => {
+      loadExam(currentExamCode);
+      startTimer();
+      setupEvents();
+    });
+
+    function setupEvents() {
+      // Switch Exam Buttons
+      document.querySelectorAll('.exam-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const code = btn.getAttribute('data-code');
+          switchExam(code);
+        });
+      });
+
+      // Reset button
+      document.getElementById('btn-reset-quiz').addEventListener('click', () => {
+        resetCurrentExam();
+      });
+
+      // Summary button
+      document.getElementById('btn-show-summary').addEventListener('click', () => {
+        showSummaryModal();
+      });
+
+      // Modal close & retry
+      document.getElementById('modal-btn-close').addEventListener('click', () => {
+        modalSummary.classList.add('hidden');
+      });
+      document.getElementById('modal-btn-retry').addEventListener('click', () => {
+        modalSummary.classList.add('hidden');
+        resetCurrentExam();
+      });
+    }
+
+    function switchExam(code) {
+      currentExamCode = code;
+      userAnswers = {};
+      
+      // Update Tab Styles
+      document.querySelectorAll('.exam-btn').forEach(b => {
+        const bCode = b.getAttribute('data-code');
+        if (bCode === code) {
+          b.className = "exam-btn px-2.5 py-1 text-xs font-semibold rounded-lg transition-all duration-200 bg-teal-600 text-white shadow-sm";
+        } else {
+          b.className = "exam-btn px-2.5 py-1 text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200";
+        }
+      });
+
+      qContainer.classList.remove('hidden');
+      
+      document.getElementById('stats-bar-wrapper').classList.remove('hidden');
+
+      loadExam(code);
+      resetTimer();
+    }
+
+    function resetCurrentExam() {
+      userAnswers = {};
+      loadExam(currentExamCode);
+      resetTimer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function loadExam(code) {
+      const exam = EXAMS_DATA[code];
+      if (!exam) return;
+
+      bannerTag.textContent = exam.title;
+      bannerStudent.textContent = `Thí sinh trên bài thi mẫu: ${exam.student}`;
+
+      renderQuestions(exam.questions);
+      renderMatrix(exam.questions);
+      updateStats();
+    }
+
+    function renderQuestions(questions) {
+      qContainer.innerHTML = '';
+
+      questions.forEach((q, idx) => {
+        const qCard = document.createElement('div');
+        qCard.id = `q-card-${q.id}`;
+        qCard.className = "p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800/90 shadow-lg space-y-3.5 transition-all duration-200";
+
+        // Question header
+        const qHeader = document.createElement('div');
+        qHeader.className = "flex items-start justify-between gap-3";
+        qHeader.innerHTML = `
+          <div class="space-y-1">
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-teal-400 border border-slate-700">
+              Câu ${q.id} / 28
+            </span>
+            <p class="text-sm sm:text-base font-semibold text-slate-100 leading-relaxed">
+              ${q.q}
+            </p>
+          </div>
+        `;
+        qCard.appendChild(qHeader);
+
+        // Options list
+        const optList = document.createElement('div');
+        optList.className = "grid grid-cols-1 gap-2.5 pt-1";
+
+        q.options.forEach((optText, optIdx) => {
+          const optBtn = document.createElement('button');
+          optBtn.id = `opt-${q.id}-${optIdx}`;
+          optBtn.className = "w-full text-left p-3 sm:p-3.5 rounded-xl border border-slate-800 bg-slate-850/60 hover:bg-slate-800/90 hover:border-slate-700 text-slate-200 text-xs sm:text-sm transition-all duration-150 flex items-center justify-between group active:scale-[0.99]";
+          
+          optBtn.innerHTML = `
+            <span class="flex-1 pr-2 leading-relaxed">${optText}</span>
+            <span class="opt-icon w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center flex-shrink-0 text-slate-500 group-hover:border-slate-500">
+              <span class="text-[10px] font-bold">${['A', 'B', 'C', 'D'][optIdx]}</span>
+            </span>
+          `;
+
+          // ONE-TAP CLICK HANDLER
+          optBtn.addEventListener('click', () => {
+            handleOneTapAnswer(q.id, optIdx, q.answer, q.exp);
+          });
+
+          optList.appendChild(optBtn);
+        });
+
+        qCard.appendChild(optList);
+
+        // Explanation Box (Hidden initially)
+        const expBox = document.createElement('div');
+        expBox.id = `exp-box-${q.id}`;
+        expBox.className = "hidden mt-3 p-3.5 rounded-xl bg-slate-850 border border-slate-800 text-xs leading-relaxed space-y-1";
+        qCard.appendChild(expBox);
+
+        qContainer.appendChild(qCard);
+      });
+    }
+
+    function handleOneTapAnswer(qId, selectedIdx, correctIdx, expText) {
+      // If already answered, do nothing
+      if (userAnswers[qId] !== undefined) return;
+
+      userAnswers[qId] = selectedIdx;
+      const isCorrect = (selectedIdx === correctIdx);
+
+      // Highlight selected option
+      const selectedBtn = document.getElementById(`opt-${qId}-${selectedIdx}`);
+      const correctBtn = document.getElementById(`opt-${qId}-${correctIdx}`);
+      const expBox = document.getElementById(`exp-box-${qId}`);
+
+      // Disable all options for this question
+      for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`opt-${qId}-${i}`);
+        if (btn) {
+          btn.disabled = true;
+          btn.classList.remove('hover:bg-slate-800/90', 'hover:border-slate-700', 'active:scale-[0.99]');
+        }
+      }
+
+      if (isCorrect) {
+        // CORRECT: Green style
+        selectedBtn.className = "w-full text-left p-3 sm:p-3.5 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-200 text-xs sm:text-sm font-semibold flex items-center justify-between shadow-lg shadow-emerald-950/50";
+        selectedBtn.querySelector('.opt-icon').innerHTML = `
+          <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        `;
+        selectedBtn.querySelector('.opt-icon').className = "w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-400 flex items-center justify-center flex-shrink-0";
+      } else {
+        // WRONG: Red style
+        selectedBtn.className = "w-full text-left p-3 sm:p-3.5 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-200 text-xs sm:text-sm font-semibold flex items-center justify-between shadow-lg shadow-rose-950/50";
+        selectedBtn.querySelector('.opt-icon').innerHTML = `
+          <svg class="w-4 h-4 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        `;
+        selectedBtn.querySelector('.opt-icon').className = "w-5 h-5 rounded-full bg-rose-500/20 border border-rose-400 flex items-center justify-center flex-shrink-0";
+
+        // Also highlight CORRECT option in Green
+        if (correctBtn) {
+          correctBtn.className = "w-full text-left p-3 sm:p-3.5 rounded-xl border border-emerald-500/80 bg-emerald-950/20 text-emerald-300 text-xs sm:text-sm font-medium flex items-center justify-between";
+          correctBtn.querySelector('.opt-icon').innerHTML = `
+            <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+          `;
+          correctBtn.querySelector('.opt-icon').className = "w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-400/80 flex items-center justify-center flex-shrink-0";
+        }
+      }
+
+      // Display Explanation
+      if (expBox) {
+        expBox.innerHTML = `
+          <div class="flex items-center gap-1.5 font-bold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+            <span>${isCorrect ? '✓ Chính xác!' : '✕ Chưa chính xác!'}</span>
+            <span class="text-slate-400 font-normal">| Đáp án đúng: Phương án ${['A', 'B', 'C', 'D'][correctIdx]}</span>
+          </div>
+          <p class="text-slate-300 pt-1 border-t border-slate-800 text-[11px] sm:text-xs">
+            <strong class="text-teal-400">Căn cứ lý thuyết:</strong> ${expText}
+          </p>
+        `;
+        expBox.classList.remove('hidden');
+      }
+
+      // Update question matrix item
+      updateMatrixItem(qId, isCorrect);
+
+      // Update Stats
+      updateStats();
+    }
+
+    function renderMatrix(questions) {
+      matrixContainer.innerHTML = '';
+      questions.forEach((q) => {
+        const btn = document.createElement('button');
+        btn.id = `matrix-btn-${q.id}`;
+        btn.className = "w-full aspect-square rounded-lg bg-slate-800/80 border border-slate-700/80 text-[11px] font-bold text-slate-400 hover:border-slate-500 hover:text-white transition flex items-center justify-center";
+        btn.textContent = q.id;
+
+        btn.addEventListener('click', () => {
+          const card = document.getElementById(`q-card-${q.id}`);
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.classList.add('ring-2', 'ring-teal-500');
+            setTimeout(() => card.classList.remove('ring-2', 'ring-teal-500'), 1200);
+          }
+        });
+
+        matrixContainer.appendChild(btn);
+      });
+    }
+
+    function updateMatrixItem(qId, isCorrect) {
+      const btn = document.getElementById(`matrix-btn-${qId}`);
+      if (btn) {
+        if (isCorrect) {
+          btn.className = "w-full aspect-square rounded-lg bg-emerald-600 border border-emerald-400 text-[11px] font-bold text-white shadow-sm flex items-center justify-center";
+        } else {
+          btn.className = "w-full aspect-square rounded-lg bg-rose-600 border border-rose-400 text-[11px] font-bold text-white shadow-sm flex items-center justify-center";
+        }
+      }
+    }
+
+    function updateStats() {
+      const exam = EXAMS_DATA[currentExamCode];
+      if (!exam) return;
+
+      const total = exam.questions.length;
+      let correct = 0;
+      let wrong = 0;
+
+      exam.questions.forEach(q => {
+        const ans = userAnswers[q.id];
+        if (ans !== undefined) {
+          if (ans === q.answer) correct++;
+          else wrong++;
+        }
+      });
+
+      const answered = correct + wrong;
+      const remaining = total - answered;
+      const score5 = ((correct / total) * 5.0).toFixed(2);
+      const percent = Math.round((answered / total) * 100);
+
+      statCorrect.textContent = correct;
+      statWrong.textContent = wrong;
+      statRemaining.textContent = remaining;
+      statScore.textContent = `${score5} / 5.0`;
+      progressFill.style.width = `${percent}%`;
+
+      document.getElementById('matrix-answered-count').textContent = `${answered}/${total} câu`;
+    }
+
+    function showSummaryModal() {
+      const exam = EXAMS_DATA[currentExamCode];
+      if (!exam) return;
+
+      const total = exam.questions.length;
+      let correct = 0;
+      let wrong = 0;
+
+      exam.questions.forEach(q => {
+        const ans = userAnswers[q.id];
+        if (ans !== undefined) {
+          if (ans === q.answer) correct++;
+          else wrong++;
+        }
+      });
+
+      const unanswered = total - (correct + wrong);
+      const score5 = ((correct / total) * 5.0).toFixed(2);
+      const score10 = ((correct / total) * 10.0).toFixed(1);
+
+      document.getElementById('modal-exam-title').textContent = `${exam.title} • THPT Kim Xuyên`;
+      document.getElementById('modal-score-5').textContent = `${score5} / 5.0`;
+      document.getElementById('modal-score-10').textContent = `${score10} / 10`;
+      document.getElementById('modal-count-correct').textContent = correct;
+      document.getElementById('modal-count-wrong').textContent = wrong;
+      document.getElementById('modal-count-unanswered').textContent = unanswered;
+
+      const evalEl = document.getElementById('modal-eval');
+      if (correct >= 25) {
+        evalEl.textContent = "Xuất sắc! Bạn đã nắm rất vững kiến thức Quốc phòng - An ninh lớp 11!";
+      } else if (correct >= 20) {
+        evalEl.textContent = "Khá tốt! Bạn đã đạt điểm số an toàn, hãy xem lại các câu sai để đạt điểm tối đa.";
+      } else if (correct >= 14) {
+        evalEl.textContent = "Đạt yêu cầu! Cần ôn luyện thêm về Luật Biển Việt Nam 2012 và Luật Nghĩa vụ quân sự 2015.";
+      } else {
+        evalEl.textContent = "Cần cố gắng nhiều hơn! Hãy rà soát lại căn cứ lý thuyết trong từng câu hỏi và làm lại đề nhé!";
+      }
+
+      modalSummary.classList.remove('hidden');
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (timerSeconds > 0) {
+          timerSeconds--;
+          const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+          const s = (timerSeconds % 60).toString().padStart(2, '0');
+          timerDisplay.textContent = `${m}:${s}`;
+        } else {
+          clearInterval(timerInterval);
+          showSummaryModal();
+        }
+      }, 1000);
+    }
+
+    function resetTimer() {
+      timerSeconds = 45 * 60;
+      timerDisplay.textContent = "45:00";
+      startTimer();
+    }
+  </script>
+</body>
+</html>
